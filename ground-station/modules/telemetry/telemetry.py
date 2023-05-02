@@ -371,7 +371,6 @@ class Telemetry(Process):
             blocks = blocks[8 + block_len:]
     
     def parse_radio_payload(self, data: str):
-        print("OOOlala")
         print(data)
         data = bytearray.fromhex(data)
         if data[0] == 3: #Battery
@@ -380,13 +379,14 @@ class Telemetry(Process):
            self.telemetry_data["battery"] = {"mission_time":time, "voltage": voltage+2}
         elif data[0] == 4: #Bme
             time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
-            temperature = unpack('f', data[5:9])
-            pressure = unpack('I', data[9:13]) 
-            humimdity = unpack('f', data[13:17]) 
-            altitude = unpack('f', data[17:21])
+            temperature = unpack('f', data[5:9])[0]
+            pressure = unpack('I', data[9:13])[0]
+            humidity = unpack('f', data[13:17])[0]
+            altitude = unpack('f', data[17:21])[0]
             print("Altitude", altitude)
-            self.telemetry_data["bme"] = {"mission_time":time, "temperature": temperature[0] - 3, "pressure" : pressure[0] - 2000, "humidity":humimdity, "altitude": altitude[0]+80}
-            self.telemetry_data["gnss"] = {"mission_time":time, "position": {"longitude":57.57614, "latitude":12.07289}}
+            self.telemetry_data["bme"] = {"mission_time":time, "temperature": temperature - 3, "pressure" : pressure - 2000, "humidity":humidity, "altitude": altitude+80}
+            
+            #TODO remove placeholder
             self.telemetry_data["gnss_meta"] = {"mission_time":time, "gps_sats_in_use": [2, 5, 10, 13, 15, 18, 23, 24, 27], "glonass_sats_in_use": [69, 70, 79, 85],"sats_in_view": [
                 {"sat_type": "GPS", "elevation": 68, "snr": 32 + random.randrange(-2, 2), "id": 18, "azimuth": 64},
                 {"sat_type": "GPS", "elevation": 62, "snr": 33 + random.randrange(-2, 2), "id": 23, "azimuth": 224},
@@ -409,10 +409,104 @@ class Telemetry(Process):
 
             self.status_data.rocket.last_mission_time = time
 
+            f = open("data/bme.csv", "a")
+            f.write(f"{time},{temperature},{pressure},{humidity},{altitude}\n")
+            f.close()
+
+        elif data[0] == 5: #UV
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            uv = unpack('f', data[5:9])[0]
+            lux = unpack('f', data[9:13])[0] 
+            self.telemetry_data["uv"] = {"mission_time":time, "uv": uv, "lux" : lux}
+            f = open("data/uv.csv", "a")
+            f.write(f"{time},{uv},{lux}\n")
+            f.close()
+
+        elif data[0] == 6: #Acceleration
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            x = unpack('f', data[5:9])[0]
+            y = unpack('f', data[9:13])[0] 
+            z = unpack('f', data[13:17])[0]
+
+            self.telemetry_data["acceleration"] = {"mission_time":time, "x": x, "y" : y, "z": z}
+            f = open("data/acceleration.csv", "a")
+            f.write(f"{time},{x},{y},{z}\n")
+            f.close()
+
+        elif data[0] == 7: #Gyro
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            x = unpack('f', data[5:9])
+            y = unpack('f', data[9:13]) 
+            z = unpack('f', data[13:17])
+
+            self.telemetry_data["gyro"] = {"mission_time":time, "x": x, "y" : y, "z": z}
+        
+        elif data[0] == 8: #Magnet
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            x = unpack('f', data[5:9])
+            y = unpack('f', data[9:13]) 
+            z = unpack('f', data[13:17])
+
+            self.telemetry_data["magnet"] = {"mission_time":time, "x": x, "y" : y, "z": z}
+            
+        elif data[0] == 9: #Rotation
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            real = unpack('f', data[5:9])[0]
+            i = unpack('f', data[9:13])[0] 
+            j = unpack('f', data[13:17])[0]
+            k = unpack('f', data[17:21])[0]
+
+            self.telemetry_data["rotation"] = {"mission_time":time, "real": real, "i" : i, "j": j, "k": k}
+            f = open("data/rotation.csv", "a")
+            f.write(f"{time},{real},{i},{j},{k}\n")
+            f.close()
+        
+        elif data[0] == 10: #Activity
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            
+            match data[5]:
+                case 0:
+                    activity = "Unknown"
+                case 1:
+                    activity = "On table"
+                case 2:
+                    activity = "Stationary"
+                case 3:
+                    activity = "Stable"
+                case 4:
+                    activity = "In motion"
             
 
+            self.telemetry_data["activity"] = {"mission_time":time, "activity": activity}
 
-        
+        elif data[0] == 11: # Status
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24) 
+
+            status = ""
+            if data[5] == 1:
+                status = "start"
+            elif data[5] == 2:
+                status = "pad"
+            elif data[5] == 3:
+                status = "flight"
+            elif data[5] == 4:
+                status = "drop"
+            elif data[5] == 5:
+                status = "retrieval"
+
+            self.telemetry_data["status"] = {"mission_time": time, "status": status}
+
+            print("Status data rec: ", data[5], status)
+            
+        elif data[0] == 12: #GPS
+            time = data[1] + (data[2]<<8) + (data[3]<<16) + (data[4]<<24)
+            lat = unpack('d', data[5:13])[0]
+            lng = unpack('d', data[13:21])[0]
+
+            print("Got gps", lat, lng)
+
+            self.telemetry_data["gnss"] = {"mission_time":time, "position": {"longitude":lng, "latitude":lat}}
+
 
 
 def _parse_packet_header(header: str) -> PacketHeader:

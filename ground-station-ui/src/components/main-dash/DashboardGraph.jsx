@@ -26,7 +26,7 @@ export default function DashboardGraph({
   const y = useStorage(y_cb);
 
   // Format titles
-  title = `${title} ${y[0]} ${y_unit}`; // Main title with latest val
+  title = `${title} ${y[y.length-1]} ${y_unit}`; // Main title with latest val
   x_title = `${x_title} (${x_unit})`; // X title
   y_title = `${y_title} (${y_unit})`; // Y title
 

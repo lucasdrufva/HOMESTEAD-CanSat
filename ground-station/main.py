@@ -99,6 +99,8 @@ def main():
     logging.info(f"{'WebSocket':.<15} started.")
 
     ws_commands.put("serial lora_radio connect /dev/cu.wchusbserial56581019021")
+    # ws_commands.put("serial lora_radio connect /dev/cu.wchusbserial56581019021")
+    # ws_commands.put("serial lora_radio connect test")
 
     while True:
         # WS Commands have been sent to main process for handling

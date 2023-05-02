@@ -39,6 +39,36 @@ export default function Home() {
     return data.bme.map((packet) => packet.humidity);
   }
 
+  const get_uv_mission_time = (data) => {
+    return data.uv.map((packet) => packet.mission_time /1000);
+  }
+
+  const get_uv_y = (data) => {
+    return data.uv.map((packet) => packet.uv);
+  }
+
+  const get_uv_y_lux = (data) => {
+    return data.uv.map((packet) => packet.lux);
+  }
+
+  const get_accel_mission_time = (data) => {
+    return data.acceleration.map((packet) => packet.mission_time /1000);
+  }
+
+  const get_accel_x = (data) => {
+    return data.acceleration.map((packet) => packet.x);
+  }
+
+  const get_accel_y = (data) => {
+    return data.acceleration.map((packet) => packet.y);
+  }
+
+  const get_accel_z = (data) => {
+    return data.acceleration.map((packet) => packet.z);
+  }
+
+
+
   // const get_acceleration_mission_time = (data) => {
   //   return data.acceleration_data.map((packet) => packet.mission_time / 1000);
   // }
@@ -110,6 +140,73 @@ export default function Home() {
           line_colour={1}
           className="card"
         />
+
+        <DashboardGraph
+          title="UV"
+          x_title="Time"
+          x_unit="s"
+          y_title="UV index"
+          y_unit="index"
+          x_cb={get_uv_mission_time}
+          y_cb={get_uv_y}
+          line_colour={1}
+          className="card"
+        />    
+        <DashboardGraph
+          title="LUX"
+          x_title="Time"
+          x_unit="s"
+          y_title="Lux"
+          y_unit="Lux"
+          x_cb={get_uv_mission_time}
+          y_cb={get_uv_y_lux}
+          line_colour={1}
+          className="card"
+        />  
+        <DashboardGraph
+          title="Accelerartion x"
+          x_title="Time"
+          x_unit="s"
+          y_title="Acceleration"
+          y_unit="m/s2"
+          x_cb={get_accel_mission_time}
+          y_cb={get_accel_x}
+          line_colour={1}
+          className="card"
+        />  
+        <DashboardGraph
+          title="Accelerartion y"
+          x_title="Time"
+          x_unit="s"
+          y_title="Acceleration"
+          y_unit="m/s2"
+          x_cb={get_accel_mission_time}
+          y_cb={get_accel_y}
+          line_colour={1}
+          className="card"
+        />  
+        <DashboardGraph
+          title="Accelerartion z"
+          x_title="Time"
+          x_unit="s"
+          y_title="Acceleration"
+          y_unit="m/s2"
+          x_cb={get_accel_mission_time}
+          y_cb={get_accel_z}
+          line_colour={1}
+          className="card"
+        />  
+        <DashboardGraph
+          title="Gyro x"
+          x_title="Time"
+          x_unit="s"
+          y_title="Gyro"
+          y_unit="degrees/s"
+          x_cb={get_accel_mission_time}
+          y_cb={get_accel_z}
+          line_colour={1}
+          className="card"
+        />  
       </section>
     </main>
   );

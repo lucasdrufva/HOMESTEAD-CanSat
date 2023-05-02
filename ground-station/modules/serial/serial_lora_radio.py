@@ -69,3 +69,22 @@ class SerialLoraRadio(Process):
         message = message.strip()
         message = message[8:]
         self.lora_radio_payloads.put(message)  # Put serial message in data queue for telemetry
+
+    def write_to_lora_radio(self, command_string: str) -> Optional[bool]:
+        """
+        Writes data to the RN2483 radio via UART.
+        :author: Tarik
+        :param command_string: The full command to be sent to the RN2483 radio
+
+        >> write_to_rn2483_radio("radio set pwr 7")
+        >> "ok"
+        Above example sets the radio transmission power to 7
+        """
+
+        data = str(command_string)
+        data += "\r\n"  # Must include carriage return for valid commands (see DS40001784B pg XX)
+        self.ser.flush()  # Flush the serial port
+
+        self.ser.write(data.encode('utf-8'))  # Encode command_string as bytes and then transmit over serial port
+
+        print("Sent to radio:", data)

@@ -10,6 +10,7 @@ import logging
 from multiprocessing import Process, Queue, active_children
 from serial import Serial, SerialException
 from modules.serial.serial_lora_radio import SerialLoraRadio
+from modules.serial.serial_file_lora import SerialFileLora
 from signal import signal, SIGTERM
 
 
@@ -80,6 +81,17 @@ class SerialManager(Process):
                         proposed_serial_port
                     ),
                     daemon=True)
+            else:
+                self.lora_radio = Process(
+                    target=SerialFileLora,
+                    args=(
+                        self.serial_status,
+                        self.radio_signal_report,
+                        self.lora_radio_input,
+                        self.lora_radio_payloads,
+                        proposed_serial_port
+                    ),
+                    daemon=True)
             
             self.lora_radio.start()
         elif radio_ws_cmd == "connect":
@@ -92,6 +104,8 @@ class SerialManager(Process):
             self.lora_radio = None
         elif radio_ws_cmd == "disconnect":
             logging.warning("Serial: lora Radio already disconnected.")
+        elif radio_ws_cmd == "mode":
+            self.lora_radio_input.put(ws_cmd[1])
 
     def update_serial_ports(self) -> list[str]:
         """ Finds and updates serial ports on device

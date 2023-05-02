@@ -34,7 +34,7 @@ const MapComponent = ({ className }) => {
       iconSize: [25, 25],
     });
     
-    map?.setView([parseFloat(gnss_latitude), parseFloat(gnss_longitude)]);
+    map?.setView([parseFloat(gnss_longitude), parseFloat(gnss_latitude)]);
   
     // Returns a map component
     return (
@@ -46,7 +46,7 @@ const MapComponent = ({ className }) => {
       <div style={style.main_wrapper}>
         <MapContainer
           style={style.map_wrapper}
-          center={[34.519939, -105.870087]}
+          center={[57.576217833, 12.072948667]}
           zoom={7}
           attributionControl={true}
           zoomControl={true}
