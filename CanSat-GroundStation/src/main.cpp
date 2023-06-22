@@ -14,7 +14,7 @@
 #define RFM95_RST 23
 //#define RFM95_RST 2
 #define RFM95_INT 26
-#define RF95_FREQ 434.0
+//#define RF95_FREQ 434.0
 
 #define SCK     5    // GPIO5  -- SX1278's SCK
 #define MISO    19   // GPIO19 -- SX1278's MISO
@@ -58,7 +58,10 @@ void setup() {
   LoRa.setPins(SS,RST,DI0); 
   //spi.setPins(MISO, MOSI, SCK); //// MISO 12, MOSI 11, SCK  13 
 
-  if(!LoRa.begin(434E6))
+  // ÄNDRA FREKVENS HÄR!!!
+  // ex 433.150mhz = 433150000
+  // Alltså enheten är i hertz
+  if(!LoRa.begin(434000000))
   {
     while (1)
     {

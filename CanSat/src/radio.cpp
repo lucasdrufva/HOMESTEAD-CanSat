@@ -4,6 +4,9 @@
 
 #include <Arduino.h>
 
+
+//Ändra frekvens här:
+//Enhet mhz
 #define RF95_FREQ 434.0
 
 extern Mode deviceMode;
