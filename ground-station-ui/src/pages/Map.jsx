@@ -46,7 +46,7 @@ const MapComponent = ({ className }) => {
       <div style={style.main_wrapper}>
         <MapContainer
           style={style.map_wrapper}
-          center={[57.576217833, 12.072948667]}
+          center={[37.187, -3.563]}
           zoom={7}
           attributionControl={true}
           zoomControl={true}

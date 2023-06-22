@@ -89,7 +89,8 @@ class SerialManager(Process):
                         self.radio_signal_report,
                         self.lora_radio_input,
                         self.lora_radio_payloads,
-                        proposed_serial_port
+                        proposed_serial_port,
+                        ws_cmd[2]
                     ),
                     daemon=True)
             

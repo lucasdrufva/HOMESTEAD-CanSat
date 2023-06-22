@@ -13,7 +13,8 @@ class SerialFileLora(Process):
             radio_signal_report: Queue,
             lora_radio_input: Queue,
             lora_radio_payloads: Queue,
-            serial_port: str
+            serial_port: str,
+            file: str
     ):
         Process.__init__(self)
 
@@ -24,11 +25,13 @@ class SerialFileLora(Process):
 
         self.serial_port = serial_port
         self.ser = None
+        
+        self.file = file
 
         self.run()
     
     def run(self):
-        file1 = open('raw/data9.txt', 'r')
+        file1 = open(self.file, 'r')
         Lines = file1.readlines()
 
         ind = 0

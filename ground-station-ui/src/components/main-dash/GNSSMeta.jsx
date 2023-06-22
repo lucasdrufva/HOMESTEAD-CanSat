@@ -9,6 +9,9 @@ import Satellite from "./Satellite";
 
 export default function GNSSMeta({ className }) {
   const get_metadata = (data) => {
+    if(data.gnss_meta == undefined){
+      return {};
+    }
     return data.gnss_meta[data.gnss_meta.length-1];
   };
 

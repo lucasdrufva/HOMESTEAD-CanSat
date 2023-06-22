@@ -1,5 +1,7 @@
 #include "flash.h"
 
+#include <Arduino.h>
+
 #include "pins.h"
 
 union u8_u32

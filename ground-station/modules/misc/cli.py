@@ -34,3 +34,9 @@ parser.add_argument(
     help="Output file for logging messages. Logs to console by default.",
     type=file_path,
 )
+
+parser.add_argument(
+    "-f",
+    help="Input file",
+    type=file_path,
+)

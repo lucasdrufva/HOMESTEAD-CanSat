@@ -116,7 +116,7 @@ void BnoSensor::setReports(void) {
   // if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED)) {
   //   Serial.println("Could not enable gyroscope");
   // }
-  if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, 1000000)) {
+  if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, 100000)) {
     Serial.println("Could not enable magnetic field calibrated");
   }
   if (!bno08x.enableReport(SH2_LINEAR_ACCELERATION, 100)) {

@@ -14,6 +14,7 @@ from modules.misc.cli import parser
 from multiprocessing import Process, Queue
 from re import sub
 import logging
+import sys
 
 serial_status = Queue()
 ws_commands = Queue()
@@ -45,7 +46,7 @@ def main():
     args = vars(parser.parse_args())
 
     # Print display screen
-    print_cu_rocket("No Name (Gas Propelled Launching Device)", VERSION, "Thomas Selwyn (Devil)")
+    print_cu_rocket("The powerful one", VERSION, "Lucas Drufva")
 
     # Set up logging
     logging.basicConfig(
@@ -98,7 +99,10 @@ def main():
     websocket.start()
     logging.info(f"{'WebSocket':.<15} started.")
 
-    ws_commands.put("serial lora_radio connect /dev/cu.wchusbserial56581019021")
+    if len(sys.argv) >= 3 and sys.argv[1] == "-f":
+       ws_commands.put("serial lora_radio connect test " + sys.argv[2]) 
+    else:
+        ws_commands.put("serial lora_radio connect /dev/cu.wchusbserial56581019021")
     # ws_commands.put("serial lora_radio connect /dev/cu.wchusbserial56581019021")
     # ws_commands.put("serial lora_radio connect test")
 

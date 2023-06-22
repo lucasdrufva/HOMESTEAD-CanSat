@@ -10,6 +10,7 @@ public:
     String getName(){return "Camera";}
     void run();
 private:
+    bool started = false;
     unsigned long lastPic;
-    unsigned long waitTime = 5000;
+    unsigned long waitTime = 1000;
 };

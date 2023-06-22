@@ -16,7 +16,9 @@ import { ReactComponent as Stop } from "../../assets/Stop.svg";
 import { clear_telemetry } from "../../utils/storage";
 import GaugeGraph from "../main-dash/GaugeGraph";
 
-export default function Controls({ websocketRef }) {
+import DeviceSelection from "./DeviceSelection";
+
+export default function Controls({ status, websocketRef }) {
   const minSpeed = 0.25; // Minimum speed
   const maxSpeed = 4; // Maximum speed
   const [speed, setSpeed] = useState(1); // Tracks replay speed; normal speed of 1 by default
@@ -31,6 +33,9 @@ export default function Controls({ websocketRef }) {
   };
   const get_mode_y = (data) => {
     //return data.bme.map((packet) => packet.altitude);
+    if(data.status == undefined){
+      return [];
+    }
     return data.status.map((packet) => packet.status);
   };
 
@@ -100,6 +105,7 @@ export default function Controls({ websocketRef }) {
       <Pause id="pause" onClick={pause} />
       <Forward id="forward" onClick={fast_forward} />
       </div>
+      <DeviceSelection ports={status.status.serial.available_ports}/>
       <div>
         <button onClick={()=>websocketRef.current.send(`serial lora_radio mode PAD`)}>Set mode PAD</button>
         <button onClick={()=>websocketRef.current.send(`serial lora_radio mode FLIGHT`)}>Set mode FLIGHT</button>

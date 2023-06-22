@@ -12,27 +12,18 @@ bool Camera::begin()
 
 void Camera::run()
 {
-    switch (deviceMode)
+    if (started)
     {
-    case MODE_PAD:
-        waitTime = 10000;
-        break;
-    case MODE_FLIGHT:
-        waitTime = 1000;
-        break;
-    case MODE_RETRIEVAL:
-    case MODE_EXPORT:
-        return;
-    default:
-        break;
+        if (millis() - lastPic > waitTime)
+        {
+            Serial.println("trigger camera now!!!");
+            digitalWrite(PIN_CAMERA_TRIGGER, LOW);
+            delay(50);
+            digitalWrite(PIN_CAMERA_TRIGGER, HIGH);
+            lastPic = millis();
+        }
     }
-    if(millis() - lastPic > waitTime)
-    {
-        Serial.println("trigger camera now!!!");
-        digitalWrite(PIN_CAMERA_TRIGGER, LOW);
-        delay(10);
-        digitalWrite(PIN_CAMERA_TRIGGER, HIGH);
-        lastPic = millis();
-    }
+    if(deviceMode == MODE_FLIGHT){
+        started = true;
+    } 
 }
-

@@ -43,7 +43,7 @@ function App() {
         >Map</NavLink>
       </Navbar>
 
-      <Controls websocketRef={websocketRef} />
+      <Controls status={status} websocketRef={websocketRef} />
 
       <Routes>
         <Route path="/" element={<Home />} />

@@ -5,23 +5,36 @@ import "./Home.css";
 import DashboardGraph from "../components/main-dash/DashboardGraph";
 import GaugeGraph from "../components/main-dash/GaugeGraph";
 import GNSSMeta from "../components/main-dash/GNSSMeta";
+import Visual from "../components/main-dash/Visual";
 
 export default function Home() {
   // Altitude data callbacks
   const get_altitude_mission_time = (data) => {
+    if(data.bme == undefined){
+      return [];
+    }
     return data.bme.map((packet) => packet.mission_time / 1000);
   };
   const get_altitude_y = (data) => {
+    if(data.bme == undefined){
+      return [];
+    }
     return data.bme.map((packet) => packet.altitude);
   };
 
   // Pressure data callbacks
   const get_pressure_y = (data) => {
+    if(data.bme == undefined){
+      return [];
+    }
     return data.bme.map((packet) => packet.pressure / 1000);
   };
 
   // Temperature data callbacks
   const get_temp_y = (data) => {
+    if(data.bme == undefined){
+      return [];
+    }
     return data.bme.map((packet) => packet.temperature);
   };
 
@@ -34,40 +47,68 @@ export default function Home() {
     return data.battery.map((packet) => packet.mission_time / 1000);
   };
 
-
   const get_humidity_y = (data) => {
+    if(data.bme == undefined){
+      return [];
+    }
     return data.bme.map((packet) => packet.humidity);
-  }
+  };
 
   const get_uv_mission_time = (data) => {
-    return data.uv.map((packet) => packet.mission_time /1000);
-  }
+    if(data.uv == undefined){
+      return [];
+    }
+    return data.uv.map((packet) => packet.mission_time / 1000);
+  };
 
   const get_uv_y = (data) => {
+    if(data.uv == undefined){
+      return [];
+    }
     return data.uv.map((packet) => packet.uv);
-  }
+  };
 
   const get_uv_y_lux = (data) => {
+    if(data.uv == undefined){
+      return [];
+    }
     return data.uv.map((packet) => packet.lux);
-  }
+  };
 
   const get_accel_mission_time = (data) => {
-    return data.acceleration.map((packet) => packet.mission_time /1000);
-  }
+    if(data.acceleration == undefined){
+      return [];
+    }
+    return data.acceleration.map((packet) => packet.mission_time / 1000);
+  };
 
   const get_accel_x = (data) => {
+    if(data.acceleration == undefined){
+      return [];
+    }
     return data.acceleration.map((packet) => packet.x);
-  }
+  };
 
   const get_accel_y = (data) => {
+    if(data.acceleration == undefined){
+      return [];
+    }
     return data.acceleration.map((packet) => packet.y);
-  }
+  };
 
   const get_accel_z = (data) => {
+    if(data.acceleration == undefined){
+      return [];
+    }
     return data.acceleration.map((packet) => packet.z);
-  }
+  };
 
-
+  const get_magnet_x = (data) => {
+    if(data.magnet == undefined){
+      return [];
+    }
+    return data.magnet.map((packet) => packet.x);
+  }; 
 
   // const get_acceleration_mission_time = (data) => {
   //   return data.acceleration_data.map((packet) => packet.mission_time / 1000);
@@ -90,7 +131,9 @@ export default function Home() {
           className="card"
         />
 
-        <GNSSMeta className="card" />
+        {/* <GNSSMeta className="card" /> */}
+
+        <Visual/>
 
         <GaugeGraph
           title="Pressure"
@@ -117,7 +160,20 @@ export default function Home() {
           className="card"
         />
 
-        <DashboardGraph
+        <GaugeGraph
+          title="Magnetic field - x"
+          x_cb={get_altitude_mission_time}
+          y_cb={get_magnet_x}
+          unit="μT"
+          min={0}
+          max={100}
+          inner_colour_1="red"
+          inner_colour_2="green"
+          outer_colour="green"
+          className="card"
+        />
+
+        {/* <DashboardGraph
           title="Battery Voltage"
           x_title="Time"
           x_unit="s"
@@ -127,7 +183,7 @@ export default function Home() {
           y_cb={get_voltage_y}
           line_colour={1}
           className="card"
-        />
+        /> */}
 
         <DashboardGraph
           title="Humidity"
@@ -151,7 +207,7 @@ export default function Home() {
           y_cb={get_uv_y}
           line_colour={1}
           className="card"
-        />    
+        />
         <DashboardGraph
           title="LUX"
           x_title="Time"
@@ -162,7 +218,7 @@ export default function Home() {
           y_cb={get_uv_y_lux}
           line_colour={1}
           className="card"
-        />  
+        />
         <DashboardGraph
           title="Accelerartion x"
           x_title="Time"
@@ -173,7 +229,7 @@ export default function Home() {
           y_cb={get_accel_x}
           line_colour={1}
           className="card"
-        />  
+        />
         <DashboardGraph
           title="Accelerartion y"
           x_title="Time"
@@ -184,7 +240,7 @@ export default function Home() {
           y_cb={get_accel_y}
           line_colour={1}
           className="card"
-        />  
+        />
         <DashboardGraph
           title="Accelerartion z"
           x_title="Time"
@@ -195,7 +251,7 @@ export default function Home() {
           y_cb={get_accel_z}
           line_colour={1}
           className="card"
-        />  
+        />
         <DashboardGraph
           title="Gyro x"
           x_title="Time"
@@ -206,7 +262,7 @@ export default function Home() {
           y_cb={get_accel_z}
           line_colour={1}
           className="card"
-        />  
+        />
       </section>
     </main>
   );

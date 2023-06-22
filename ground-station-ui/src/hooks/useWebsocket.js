@@ -14,7 +14,7 @@ export function useWebsocket(websocket_address, debug = false) {
 
   // Define structure of status object with default values for before connection
   const [status, setStatus] = useState({
-    version: "2.0.0",
+    version: "2.1.0",
     org: "HOMESTEAD",
     status: {
       rocket: {
@@ -24,7 +24,18 @@ export function useWebsocket(websocket_address, debug = false) {
       lora_radio: {
         connected: false,
       },
+      serial: {
+        available_ports: [],
+      }
     },
+    telemetry: {
+      acceleration: {
+        mission_time: 0,
+        x: 0,
+        y: 0,
+        z: 0,
+      }
+    }
   });
 
   // Define the structure of the replay status packet with default values for before connection
