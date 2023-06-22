@@ -13,18 +13,30 @@ function CanSat(props) {
   const [active, setActive] = useState(false);
 
   const get_rotation_real = (data) => {
+    if(data.rotation == undefined){
+      return [];
+    }
     return data.rotation.map((packet) => packet.real);
   };
 
   const get_rotation_i = (data) => {
+    if(data.rotation == undefined){
+      return [];
+    }
     return data.rotation.map((packet) => packet.i);
   };
 
   const get_rotation_j = (data) => {
+    if(data.rotation == undefined){
+      return [];
+    }
     return data.rotation.map((packet) => packet.j);
   };
 
   const get_rotation_k = (data) => {
+    if(data.rotation == undefined){
+      return [];
+    }
     return data.rotation.map((packet) => packet.k);
   };
 
